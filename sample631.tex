@@ -289,7 +289,21 @@ Very exciting things!
 %% pdflatex sample631.tex
 %% pdflatex sample631.tex
 
-Consider a vortex encoutner 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/Population_Weighted_Dust_Flux.png}
+    \caption{(Left) How the relative uncertainty on the population-weighted dust flux $\sum Q$ depends on the relative uncertainty in the $\Delta P_{\rm c}$ relationship power-law index $\gamma$. (Right) How the relative uncertainty in $\gamma$ depends on the total number of dust devil encounters for our survey, assuming the dust flux for each encounter is estimated to about $3.5\sigma_Q$ precision.}
+    \label{fig:Population_Weighted_Dust_Flux}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/data_conditioning_and_fit.png}
+    \caption{(a) The pressure time-series for sol 395, as blue dots. The vertical orange lines highlight the detected vortex signals. (b) The time-series after application of the mean boxcar filter. Apparent by eye, the scatter in the time-series increases around mid-day. (c) Convolution of the matched filter with the time-series in (b). The horizontal dashed orange line shows the detection threshold of 5. (d) A model fit (solid orange line) to the deepest vortex discovered on sol 395, along with the model fit parameters -- each point's uncertainty is calculated via $1.4826\ \times$ the median absolute deviation in the window centered on that point. The vertical orange lines show the full-width/half-max (FWHM) for this encounter.}
+    \label{fig:data_conditioning_and_fit}
+\end{figure}
+
+Consider a vortex encounter like the one depicted in Figure \ref{fig:data_conditioning_and_fit}(d). As an initial simplified approach, we will assume that, if pressure time-series data are collected during the full-width/half-max (FWHM) of a vortex encounter (shown as the vertical orange lines in Figure \ref{fig:data_conditioning_and_fit}d), the vortex is recovered. From this standpoint, all vortices that pass near the sensor will be recovered if the sensor sampling rate is at least as large as $1/\Gamma_{\rm obs}$ for the shortest-duration vortex encounter. Based on the survey in \citet{2022PSJ.....3...20J}, a reasonable estimate for this shortest-duration encounter is $\Gamma_{\rm obs} = 1\,{\rm s}$, which suggests a sampling rate of at least $1\,{\rm Hz}$ as a minimum rate for recovering all encounters. 
 
 \bibliography{sample631}{}
 \bibliographystyle{aasjournal}
