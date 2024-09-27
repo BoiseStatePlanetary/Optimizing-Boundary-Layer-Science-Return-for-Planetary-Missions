@@ -1,0 +1,73 @@
+\section{Introduction} 
+\label{sec:Introduction}
+
+Within planetary mission concepts development, there is a focus on enabling increased science return via improved usage of limited resources, such as power and data volume.  
+Such resource optimization is especially important for concepts with the aim of returning detailed observations of transient, active processes---especially those using a small spacecraft \cite{MCESAG}; such concepts will require observation- and downlink-prioritization schemes that can strategically identify when the activity of interest occurs so that a smaller number of observations or measurements can still yield high-value science results.
+In this case study, we quantify the science value that could be achieved with a low-resource monitoring instrument being used to ``trigger'' the high-resource instruments for strategic observation collection, compared to a traditional (and actually implemented) pre-scheduled observation scheme. 
+With this, we demonstrate that a fraction of the resources may be needed to return a proportional fraction of observations can still yield high-value science as long as the relevant observations are collected.
+We also identify engineering guidelines for the development and implementation of these types of strategic observation schemes.
+
+\subsection{Capturing Ephemeral Phenomena}
+\textit{Takeaways: Ephemeral science is important but hard to catch. Dust devils are of particular importance for Martian atmospheric science. Provide overview of past science and remaining holes in our knowledge}
+
+Many high-priority planetary science investigations can be addressed through characterization and measurement of ephemeral phenomena that are part of present-day geologic and climate processes and that influence human/robotic surface operations. 
+For example, dust in the Martian atmosphere is known to be a key driver of climate \citep{DecadalSurvey,Forget2017,Jackson2023} and uncertainties in the airborne dust spatiotemporal distribution remain an issue for climate model runs \citep{Madeleine2011,Mulholland2015}. 
+Orbital missions have measured the amount of dust in the upper atmosphere \citep[e.g.,][]{Martin1986,Smith2001,Heavens2011,Heavens2019,Kass2020,Batterson2023}, including during the 2018 Planet-Encircling Dust Event that killed the Opportunity Rover \citep{Staab2020}, and large-scale redistribution of dust on the surface \citep[e.g.,][]{Bapst2022}, and rovers have observed changes in atmospheric dust opacity as well as passing dust devils \citep[e.g.,][]{Thomas1985,Metzger1999,Lemmon2015,Kurgansky2012,Jackson2022,Guzewich2023}.
+However, a detailed and quantifiable understanding of how the dust gets off the ground, and how much is raised through different processes, remains elusive.
+In particular, between the large dust storms, dust is continually lofted due to winds or dust devils (Figure \textcolor{red}{XYZ}), but the rates of such lifting phenomena are unconstrained and thus there remain uncertainties in the total dust lofting budget and variability of the airborne dust distribution. 
+%Brian had some stuff on the level of uncertainty - see 10th Mars poster
+
+To address these types of issues, many high-resolution and high-fidelity observations of the activity --- generating a correlatable suite of environmental measurements and activity characterization --- are needed. 
+Efficiently acquiring such observations is hard as the timing of the phenomena is unpredictable (e.g., when the wind gusts or dust devil passes) and thus not amenable to pre-scheduled observation; sparse pre-scheduled observations may miss high-value events, while continuous observation can exceed bandwidth or power availability, especially for small spacecraft \citep{Diniega2022,MCESAG}. 
+Thus, new observing strategies are needed that maximize data collection during these ephemeral phenomena while minimizing resource usage at less interesting times, applicable towards new planetary mission concepts.
+
+\subsection{Enabling Adaptive Sampling with Science Autonomy}
+\textit{Takeaways: Science autonomy has been used to enable adaptive sampling and data prioritization on past work. Novel advance here is near-real time reactions}
+
+One option is to build an adaptive sampling strategy that is influenced by the real-time environment; i.e., focus high-power/high-data volume observations on times when events of interest are occurring. Such a strategy has been discussed in the planetary community \citep[e.g.,][]{Diniega2022,Jackson2023} but is untested, and questions remain about what technical capabilities and \textit{a priori} understanding of the environment are needed to ensure high science return and resource conservation. 
+This project will answer these questions with a proof-of-concept study of real-time martian dust devil detection and measurement. 
+This type of science investigation has clear analogy to studies of dust devil and other ephemeral phenomena on Earth \citep[e.g.,][]{Jackson2015} and Titan \citep{Lorenz2021} and parallels challenges for other in situ investigations. After applying onboard science autonomy techniques to a simulated collection of observations derived from real M2020 data, reflective of a limited power and data volume budget, we will \emph{(1)} quantitatively compare the amount of science achieved against power and data usage and \emph{(2)} identify engineering capabilities needed for such an operational scheme on future small lander missions to Mars.
+
+\subsection{Our Case Study: Low-Resource Detection of Dust Devils}
+Past studies have developed autonomous methods for detecting dust devils within already acquired data - time-series analysis of pressure signals and signatures within visible images \citep[e.g.][]{Castano2008,Guzewich2023}. 
+Identification of these events, if done onboard the spacecraft, could be used for downlink prioritization which enables better use of a small data volume envelope. 
+
+As described above, our work instead focuses on optimizing data collection, using a low-resource instrument to monitor for the activity and, when detected, ``triggering'' a shift to a high-resource observation mode. 
+Use of this type of observation scheme would save both power and data volume while collecting highly relevant observational data.
+
+For our study, we using the Mars 2020 rover's \gls{MEDA} dataset. %add a bit more on MEDA
+Prior studies have mined this full science dataset to find dust devils and estimate their contributions to the martian dust budget \citep{Jackson2022,Jackson2022b}.
+For studies of dust-lifting, wind speeds and dust amount are key parameters, along with contextual information including environmental conditions (such as humidity), the dust devil's size/internal structure, and proximity of its passage relative to the sensors. 
+
+We simulate data collection within a new observational schemes with strategic ``triggering'' of instrumentation and thus requiring much lower power and data volumes. 
+Our simulated ``collected observations'' will be samples from the MEDA dataset, including the high-resource dataset (over a specified duration) only \emph{after} a detection is generated based on the pressure data and the high-resource instrument suite has been ``turned on.''
+
+For our low-resource, monitoring instrument, we use the \gls{MEDA} pressure sensor time-series observations; this dataset has been used for dust devil detection via a simple threshold in pressure variations \citep{Jackson2022}. 
+Just this instrument, with a \unit[1]{Hz} sampling rate, is included in our ``very-low-resource'' observation mode as it is the minimum needed for monitoring for dust devils within a future mission concept. 
+For another comparison, we define a ``low-resource'' observation mode and instrument suite, which includes all of the \gls{MEDA} instruments \emph{except} for the wind sensors (listed in Table \ref{tab:PayloadModes}); this sampling provides an observational dataset that is more comparable with the science achieved with the full suite of \gls{MEDA} meteorological time-series and we avoid the long-heating/temperature stabilization time needed for the relative humidity sensor \cite{}.
+For the ''high-resource'' instrument suite, we include the \gls{MEDA} wind sensors and a camera to observe the dust devil structure and its approach relative to the sensor suite.
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{c|c|c|c|c|}
+        {} & {Very low-resource} & {Low-resource suite} & \multicolumn{2}{|c|}{High-resource suite} \\
+        {} & PS & {PS, ATS TIRS, HS, RDS} & WS & NavCam  \\ \hline
+        Power (Wh/min) & 0.093 & 0.11 & 0.22 & 0.73  \\ \hline 
+        Data Volume (Mb) & 0.040 & 0.16 & 0.33 & 11.58  \\ \hline
+    \end{tabular}
+    \caption{The listed instruments are: PS = Pressure Sensor, ATS = Air Temperature Sensor, TIRS = Thermal Infra-Red Sensor, HS = Relative Humidity Sensor, RDS = Radiation and Dust Sensor, WS = Wind Sensor. The NavCam = Navigation Camera is based on ... a camera on MSL that has been used to create videos of dust devils? \cite{}. All power and data volume numbers are from ... }
+    \label{tab:PayloadModes}
+\end{table}
+
+
+
+
+\subsection{Improving Science Return on Future Missions}
+\textit{Takeaways: Provide overall goals/motivation and key findings of this work. Connect to MEPAG goals and small landers}
+
+This project aims to directly quantify how much science autonomy algorithms can increase the ratio of science returned to resources spent using a demonstration relevant to small in situ spacecraft with a relatively light power and data budget. Our results will yield needed new guidance for deploying data science algorithms onboard small spacecraft or Earth field instrumentation, and better enable NASA to invest in technology addressing likely future community-identified needs.
+
+In our studies, we will vary (1) the method of initial dust devil detection and (2) the amount and type of data that is collected during a specified window following detection; such detailed, high frequency observations during a dust devil are needed to improve estimates of dust lofting, which remains highly uncertain.
+Three algorithms will be evaluated for their ability to detect the early signs of a dust devil and trigger collection of useful high frequency measurements, as previous work suggests is possible (i.e., a about 1\% pressure drop over ~10s indicates a dust devil \cite{8inabstract}, Figure \ref{}). Our first detection scheme will use a simple pressure change threshold, defined based on an \textit{a priori} understanding of Martian dust devils (Figure \ref{}); this is the current accepted method for identifying dust devils \cite{8inabstract}. Our second scheme will involve an expert system (e.g., using time-series statistics and probabilistic, tunable thresholds). Finally, we will train a \acrlong{ML} (e.g., a \acrfull{LSTM}) model to detect incoming dust devils in pressure time-series data.  
+
+With each scheme, we will aim to fit within the likely resources of a small mission concept. After “returning” dust devil data, we will compare science analysis results against those from analysis of the full M2020 dataset; metrics of “science output” will include the number of dust devils detected, inferred dust flux, and related uncertainties.
