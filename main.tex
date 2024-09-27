@@ -1,0 +1,61 @@
+\documentclass[linenumbers, preprint]{aastex631}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{import}
+\usepackage{units}
+\usepackage{array}
+\usepackage[acronym]{glossaries} % Acronyms & Glossaries
+
+% Create custom "anonymize" function to turn this on/off easily
+\usepackage{ifthen}
+\newcommand{\shouldanonymize}{0} % Set to 1 to anonymize, 0 to show everything
+\newcommand{\anonymize}[1]{%
+  \ifthenelse{\equal{\shouldanonymize}{1}}{}{#1}
+}
+
+% TODO Notes
+\definecolor{lightdodgerblue}{rgb}{0.4,0.85,1}
+\usepackage[colorinlistoftodos,textwidth=0cm,backgroundcolor=lightdodgerblue]{todonotes}
+\presetkeys{todonotes}{inline}{} % Make inline by default
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Main Text %%%
+
+\begin{document}
+
+\import{sections/}{0_title.tex}
+
+\import{sections/}{1_glossary.tex}
+
+\import{sections/}{2_introduction.tex}
+
+\import{sections/}{3_methods.tex}
+
+\import{sections/}{4_results_discussion.tex}
+
+\import{sections/}{5_conclusions.tex}
+
+%%% Bibliography %%%
+\bibliography{bibliography}
+\bibliographystyle{aasjournal}
+
+%%% Funding %%%
+\anonymize{
+    \section{Funding}
+    The research was carried out at the Jet Propulsion Laboratory, California Institute of Technology, under a contract with the National Aeronautics and Space Administration (80NM0018D0004). Specifically, this project was funded under the JPL Data Science Working Group pilot program. 
+}
+%%% Acknowledgements %%%
+\anonymize{
+    \section{Acknowledgments}
+}
+
+© 2024. All rights reserved.
+
+%%% Disclosures %%%
+\section{Disclosures}
+The authors declare no conflicts of interest.
+
+%%% Appendix %%%
+\pagebreak
+\import{sections/}{6_appendix.tex}
+
+\end{document}

@@ -2348,7 +2348,7 @@ final=true,
 \let\savetabular\tabular
 \def\tabular{\catcode`\&=\active\relax\catcode`\$=\active\relax\hskip\movetableright
 \savetabular}
-\long\gdef\eatone{\setbox0=\hbox\bgroup\savedollar\let$\relax}
+\long\gdef\eatone{\setbox0=\hbox\bgroup\savedollar\let\relax}
 \gdef\endeatone{\savedollar\egroup\hskip-2\tabcolsep}
 
 %% Hide, important because it allows us to split tables horizontally
