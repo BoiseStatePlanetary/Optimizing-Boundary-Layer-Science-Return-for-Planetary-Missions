@@ -1,37 +1,178 @@
 \section{Results and Discussion}
 \subsection{Evaluation: Point Estimates}
+To evaluate the performance of the detectors, we quantify how well each classified individual time points as being within, or outside of, a known vortex.
+As described in \ref{subsec:methods:evaluation}, we trained models to identify points as belonging to a vortex if they were within +/- 2 \acrshort{FWHM} windows of the vortex center (though other reasonable choices exist).
+We assessed holistic performance using a \acrfull{DET} curve.
+This approach assesses a full range of possible binary thresholds and help potential operators understand how the threshold choice will lead to tradeoffs between false positives and false negatives; lower thresholds values will result in more capture vortices but higher resource usage (i.e., more power and data usage) while higher thresholds will lead to more selective vortex detectors and save onboard resources.
+
+Figure \ref{fig:DET_curve} illustrates the point evaluation performance for all four detectors.
+Generally, the two \acrshort{ML} methods perform moderately better than the two statistically based techniques.
+Between the two \acrshort{ML} methods, performance was very similar across many threshold choices.
+For the two statistical techniques, the adaptive threshold performed marginally better.
+We attribute this to better background rejection as the adaptive technique is more robust to rejecting drift in the pressure signal.
+However, we note that at very high thresholds (corresponding to highly selective models), the performance trends change somewhat. 
+There, models become more comparable with the simple statistical model and \acrshort{LSTM} models performing best.
 
 \begin{figure}
+    \label{fig:DET_curve}
     \centering
-    \includegraphics[width=.45\textwidth]    {figures/manuscript_det_curves_point_eval_gt_4xfwhm_v1.pdf}
-    \caption{Point prediction performance for all three detectors over a range of thresholds.}
-    \label{fig:point_prediction_performance}
+    \includegraphics[width=.45\textwidth]
+    {figures/manuscript_det_curves_point_eval_gt_4xfwhm_v6.pdf}
+    \caption{Point prediction performance for all four detectors over a spectrum of thresholds. This \acrshort{DET} curve shows how changing the confidence threshold affects the tradeoff between missed vortex points (false negatives) vs. hallucinated vortex points (false positives). High confidence thresholds (upper left) correspond to a ``tight" filter returning less data but data mostly comprised of true detections (high precision). Low confidences thresholds (lower right) correspond to ``loose'' filters that select large amounts of data for transmission that will miss few vortices but also include lots of background (non-vortex) data (high recall). The \acrshort{ML}-based methods (\acrshort{LSTM} and transformer) perform moderately better than the statistics based methods. Looking within each detector class the adaptive statistical approach performs marginally better than the static detector while the two \acrshort{ML}-based detectors perform very similarly.}
+    \todo{Perhaps drop "RNN" from label}
 \end{figure}
 
 \subsection{Evaluation: Event Detections}
 \label{subsec:evaluation_event_detections_results}
+Normalized to resource usage
+
+To evaluate the detector within the context of an event detection system that alternates between Alert and Monitoring modes, we tested each at two thresholds: $\sim$5\% and $\sim$25\% data return intuitively corresponding to a tight and loose filter, respectively.
+Remember that once the Alert mode is triggered, there is a parameterized cooldown period (\unit[180]{s} here) as we wish to capture the full dust devil and because additional instruments cannot turn on and off arbitrarily fast.
+See Section \ref{subsec:evaluation_event_detections_methods} for more details.
+
+Figure \ref{fig:system_performance} shows the vortices that were identified across all detectors and both confidence thresholds.
+The static distribution detector performed well for short, large vortices where there are fast, dramatic changes in pressure.
+The two statistical detectors performed poorly for the small devation, long duration vortices because this subpopulation lacks large pressure deviations that would fall in the tail of their statistical distributions and trigger the Alert mode.
+Both \acrshort{ML}-based detectors perform similarly at both thresholds.
+Compared to the statistical approaches, they did better on the weak, long-lasting vortices.
+This is likely because the \acrshort{LSTM} and transformer models learned to accumulate weak evidence over the full time window.
+As expected, the loose filter increased the number of full and partial hits for all detectors.
+
+These results visualize how different systems will tend to over- or under-represent subsets of the full vortex population.
+Biases are important to identify as any of these detectors could be appropriate depending on the spacecraft deploying a vortex detector; more sophisticated, \acrshort{ML}-based detectors will also require more complex development beforehand and monitoring during operations.
+A reasonable strategy may involve switching between detectors at different mission phases.
+For example, a simple statistical model with a loose threshold (or even pre-scheduled sampling periods) may be reasonable during early mission phases while the science team accumulates understanding about the vortex population's characteristics.
+After they have characterized the environment and collected enough data to begin training mission-specific models, that may be a reasonable point to switch to a more capable model and/or use tighter filter thresholds.
+
+Detailed performance on the test set is showing in Table \ref{tab:strict_point_detection_performance}.
+Here, we only count full detections as hits (though see Table \ref{tab:inclusive_point_detection_performance} for the same analysis when considering full or partial detections as hits).
+Recall is the most important metric from a scientific perspective as it provides the proportion of vortices where the alert mode was triggered before the \acrshort{FWHM}.
+Generally, the \acrshort{LSTM} performed slightly better than the transformer with both clearly outperforming the statistical methods.
+However, not that the even the simple statistical detector performed reasonably and narrowly achieved the best precision score in one the loose threshold scenario.
+
 
 \begin{figure}
     \centering
-    \includegraphics[width=.8\textwidth]    {figures/manuscript_system_performance_v1.pdf}
-    \caption{Event detections for all three detectors using loose and tight filter thresholds.}
     \label{fig:system_performance}
+    \includegraphics[width=1.0\textwidth]    {figures/manuscript_system_performance_v4.pdf}
+    \caption{Event detections for all four detectors using approximately 5\% (top row) and 25\% (bottom row) data return. Markers are as in Figure \ref{fig:vortex_dur_pres_dists} and identify true positives, near misses, and complete misses indicating whether the alert mode triggered before a vortex's \acrshort{FWHM} window, during a \acrshort{FWHM} window, or was not triggered. As expected, the loose threshold resulted in more full and partial hits for all detectors (comparing top to bottom rows). The two \acrshort{ML}-based detectors performed better on the small devation, long duration vortices likely because they learned to accumulate evidence over the entire time window.}
 \end{figure}
 
+\begin{table}[h!]
+    \centering
+    \caption{Detector performance at low and high probability thresholds for full detections.}
+    \label{tab:strict_point_detection_performance}
+
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lcccc cccc}
+    \toprule
+     & \multicolumn{4}{c}{Low Thresh. ($\sim$25\% return)} & \multicolumn{4}{c}{High Thresh. ($\sim$5\% return)} \\
+    \cmidrule(lr){2-5} \cmidrule(lr){6-9}
+    \textbf{Detector} & Hit Rate & Precision & Recall & F1 & Hit Rate & Precision & Recall & F1 \\
+    \midrule
+    Simple Stats      & X& \textbf{0.108}& 0.561& 0.182& X& 0.185& 0.263& 0.217\\
+    Adaptive Stats    & X& 0.057& 0.649& 0.105& X& 0.120& 0.351& 0.179\\
+    LSTM         & X& 0.103& \textbf{0.860}& \textbf{0.185}& X& \textbf{0.234}& \textbf{0.561}& \textbf{0.330}\\
+    Transformer  & X& 0.095& 0.825& 0.170& X& 0.204& 0.526& 0.294\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+
+We also investigated the relative detection timing for each combination of detector and confidence threshold (Figure \ref{fig:detection_timing}) to understand when alerts were triggered relative to the \acrshort{FWHM} window. 
+The ideal detector will identify early signs of vortex before this critical time period.
+While we chose true positive detections as any trigger occurring at least 1 \unit{s} before a \acrshort{FWHM}, but future concept teams may wish to conduct more analysis here depending on instruments needing more time to warm up or begin recording data.
+Generally, tighter thresholds correspond to stronger evidence of a vortex event leading to later triggers either very close to or during the \acrshort{FWHM} window.
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{example-image.pdf}
-    \caption{Detection lead time between alert trigger and key science event.}
+    \includegraphics[width=1.0\textwidth]{figures/manuscript_system_performance_detection_timing_v5.pdf}
+    \caption{Detection lead time between alert trigger and \acrshort{FWHM}.}
     \label{fig:detection_timing}
 \end{figure}
 
+\subsection{ML Model Interpretability and Explainability}
+\begin{itemize}
+\item     Global shap bar charts
+\item Individual examples backing up accumulation of evidence over weak, long lasting vortices
+    \item Use of transformer attention as secondary signal
+\end{itemize}
+
+\begin{figure}
+    \label{fig:shap_plot_paired}
+    \centering
+    \includegraphics[width=0.45\textwidth]{example-image.pdf}
+    \caption{The overall importance of each time point to the \acrshort{ML} model's output predictions is visualized using the \acrshort{SHAP} explainability toolbox. Both the \acrshort{LSTM} and transfomer models place high importance on time points near T=0. They also place relatively high importance on the trailing edge of the window, but note that the \acrshort{LSTM} uses these time points more than the transformer.}
+\end{figure}
+
+\begin{figure}
+    \label{fig:transformer_attention}
+    \centering
+    \begin{interactive}{animation}{videos/SCLKs_674497300_674497610_vortex_294_transformer_v4.mp4}
+    \includegraphics[width=0.45\textwidth]{videos/frame_00142_vortex_294_transformer_v4.png}
+    \end{interactive}
+    \caption{An example detection from the transformer model along with accompanying attention weights. As expected, the transformer model generally assigns higher weight to data points in the initial deflection of an incoming vortex. In addition, it assigns high attention values to points where there are pressure dips, especially at the peak deflection. This figure is available as an animation online and displays how the transformer's predicted vortex likelihood and attention change over time.}
+\end{figure}
+
 \subsection{Science Analysis}
-\todo{Brian and Chelle to draft}
+\todo{Brian and Chelle, can you help draft this section to understand how science results from such a mission would have compared to existing literature}
+Rough content outline (but change as needed).
+\begin{itemize}
+    \item General takeaways on how the different models perform in terms of estimated relative dust flux. Rough analysis axes we can consider
+    \begin{itemize}
+        \item 4 model architectures (LSTM has best recall, likely want to focus on that one)
+        \item Loose/tight filter (5 or 25\%) of data
+        \item  We can analyze only strict detection (trigger before FWHM) and/or inclusive (trigger before OR during FWHM)
+    \end{itemize}
+    \begin{itemize}
+        \item Compare with expected science return for existing (non-autonomous) operations?
+    \end{itemize}
+    \item Besides dust flux estimate, what additional science would having data from the instrument in Table 1 enable?
+\end{itemize}
 
-\subsection{Resources Needed to Implement}
-\subsubsection{Power and Data Volume to Collect Observations}
-\subsubsection{Onboard Computing Power}
+\begin{figure}
+    \label{fig:science_relative_dust_flux}
+    \centering
+    \includegraphics[width=0.45\textwidth]{example-image.pdf}
+    \caption{\textcolor{red}{Science figure highlighting our hypothetical relative dust flux estimates compared to Brian's paper.}}
+\end{figure}
+
+\subsection{Informing Constraints on the Path to Infusion}
+\todo{Serina/Mark need to discuss to better outline this section. Generally, it should discuss how the outcomes of this work inform future mission concepts}
+\subsubsection{Required Power and Data Volume}
+We can estimate (from Table 1)
+\begin{itemize}
+    \item Power
+    \item Data volume
+    \item (optional) Memory usage (e.g., with TF Profiler)
+    \item How realistic is real-time compute (1 Hz)
+\end{itemize}
+Compare power/data volume to current COTS power solutions and transmission methods
+
+\begin{table}[h!]
+    \centering
+    \caption{Estimated resource comparison of standard pre-scheduled data collection vs. real-time detectors.}
+    \todo{PLACEHOLDER: Numbers need to be filled in. Could add N FWHM points captured as a column}
+    \label{tab:resource_usage}
+    \renewcommand{\arraystretch}{1.2}
+
+    \begin{tabular}{lccccc}
+    \toprule
+     &
+    Power &
+    Data &
+    Transmission Power &
+    N. Events &
+    Total Power/Event \\
+    \textbf{Detector} & (Wh) & (Mb) & (Wh) & & (Wh) \\
+    \midrule
+    Pre-scheduled         & 1.23 & 2.34 & 0.56 & 42 & 0.78 \\
+    Simple Stats          & 0.98 & 1.23 & 0.40 & 35 & 0.65 \\
+    Adaptive Stats        & 0.85 & 1.05 & 0.38 & 39 & 0.81 \\
+    LSTM                  & 1.10 & 1.50 & 0.45 & 44 & 0.74 \\
+    Transformer           & 1.40 & 1.75 & 0.60 & 48 & 0.72 \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
 \subsubsection{Prior Knowledge about the Phenomenon}
-
-
-\subsection{Informing Engineering Constraints}

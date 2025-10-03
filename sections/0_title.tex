@@ -1,15 +1,21 @@
 \shorttitle{Improved Boundary Science with Science Autonomy}
 
 \title{Leveraging Science Autonomy to Optimize Boundary Layer Science for Future Planetary Missions}
-%Surface science, dust devil detection
+%Surface science, dust devil detection, real time
 
 %%% AUTHORS %%%
+
 \anonymize{
     \author[0000-0002-6521-3256]{Mark Wronkiewicz}
     \affiliation{Jet Propulsion Laboratory, California Institute of Technology, 4800 Oak Grove Dr., Pasadena, CA 91009, USA}
     
     \author[0000-0003-3766-2190]{Serina Diniega}
     \affiliation{Jet Propulsion Laboratory, California Institute of Technology, 4800 Oak Grove Dr., Pasadena, CA 91009, USA}
+
+    \author[0000-0000-0000-0000]{Michelle Szurgot}
+    \affiliation{Department of Physics, Boise State University, 
+    1910 University Drive, 
+    Boise ID 83725-1570 USA}
     
     \author[0000-0002-9495-9700]{Brian Jackson}
     \affiliation{Department of Physics, Boise State University, 
@@ -22,10 +28,24 @@
 
 \keywords{Planetary boundary layers (1245), Mars (1007)}
 
-\begin{abstract}
-Very exciting things!
+\todo{Discuss Author Order}
+\todo{Mark: Kiri Wagstaff offered to review}
+\todo{Get Chelle's Orchid ID}
 
-Nature's guide to a good abstract:
-https://www.nature.com/documents/nature-summary-paragraph.pdf
-%Limit of 250, at 230
+
+
+\begin{abstract}
+Planetary missions are being designed to collect more and different types of data, but  sometimes with extremely limited resource envelopes as we seek to address high priority science with even small spacecraft. 
+One way to solve this issue is with observation schemes where onboard decisions are used to strategically collect the most useful measurements.
+Such schemes are especially important for investigations of transient and unpredictable phenomenon, such as the passage of Martian dust devils.
+We conducted a case study with Martian convective vortex observations collected by the Mars 2020 rover Mars Environmental Dynamics Analyzer (MEDA) payload suite, simulating a more strategic observation scheme by sampling the existing and already-analyzed data.
+We ``collect'' data from high-resource instruments (such as a camera and wind sensors) only after a vortex is autonomously detected within the low-resource, monitoring pressure sensor time-series data.
+We use three different detection methods, varying in the amount of a priori information needed about the environment/phenomenon and onboard processing complexity.
+We then analyze the sampled data, to determine the number of vortices observed and how useful the data is for quantifying the dust budget of those vortices.
+With this simulation, we quantify the science value achieved and ratio that with the power/data volume needed, demonstrating that high-priority science can be achieved with a fraction of the resources with these types of observation schemes.
+From our results, we generate engineering and operational guidance for future implementation of such schemes, broadening the planetary science achievable with small spacecraft.
+
+%Nature's guide to a good abstract:
+%https://www.nature.com/documents/nature-summary-paragraph.pdf
+%Limit of 250, at 246
 \end{abstract}
