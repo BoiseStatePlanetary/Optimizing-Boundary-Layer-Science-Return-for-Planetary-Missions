@@ -315,20 +315,6 @@ FUNCTION {field.or.null}
   if$
 }
 
-FUNCTION {bolden}
-{ duplicate$ empty$
-{ pop$ "" }
-    { "{\bf " swap$ * "}" * }
-  if$
-  }
-  
-FUNCTION {textit}
-{ duplicate$ empty$
-{ pop$ "" }
-    { "\textit{" swap$ * "}" * }
-  if$
-  }
-
 FUNCTION {emphasize}
 { skip$ }
 
@@ -1189,11 +1175,8 @@ FUNCTION {article}
   format.authors "author" output.check
   author format.key output
   name.or.dash
-  format.date "year" output.check 
+  format.date "year" output.check
   date.block
-%% new
-  format.title output % textit % remove the first "%" on this line to italicize the title
-%% new
   crossref missing$
     { journal
       "journal" output.check

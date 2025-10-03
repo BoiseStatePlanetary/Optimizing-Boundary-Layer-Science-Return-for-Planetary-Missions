@@ -7,6 +7,29 @@
     \label{fig_appendix:vortex_press_diff_without_bkgd_subtraction_dist_fit}
 \end{figure}
 
+
+\subsection{Evaluation}
+\begin{table}[h!]
+    \centering
+    \caption{Detector performance at low and high probability thresholds for full and near detections.}
+    \label{tab:inclusive_point_detection_performance}
+
+    %\renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lccc ccc}
+    \toprule
+     & \multicolumn{3}{c}{Low Thresh. ($\sim$25\% return)} & \multicolumn{3}{c}{High Thresh. ($\sim$5\% return)} \\
+    \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+    \textbf{Detector} & Precision & Recall & F1 & Precision & Recall & F1 \\
+    \midrule
+    Simple Stats      & \textbf{0.173}& 0.895& \textbf{0.290}& \textbf{0.395}& 0.561& 0.464\\
+    Adaptive Stats    & 0.077& 0.877& 0.142& 0.259& 0.754& 0.386\\
+    LSTM         & 0.114& \textbf{0.947}& 0.203& 0.380& 0.912& \textbf{0.536}\\
+    Transformer  & 0.109& \textbf{0.947}& 0.195& 0.361& \textbf{0.930}& 0.520\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+
 \subsection{Full List of Event Detections}
 
 \subsection{Example Calculation}

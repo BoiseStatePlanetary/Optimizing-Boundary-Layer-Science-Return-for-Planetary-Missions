@@ -4,12 +4,28 @@
 \usepackage{units}
 \usepackage{array}
 \usepackage[acronym]{glossaries} % Acronyms & Glossaries
+\usepackage{booktabs} % For table
+\usepackage{makecell}
 
-% Create custom "anonymize" function to turn this on/off easily
+% Create custom "anonymize" function to easily hide identifying info for review
 \usepackage{ifthen}
 \newcommand{\shouldanonymize}{0} % Set to 1 to anonymize, 0 to show everything
 \newcommand{\anonymize}[1]{%
-  \ifthenelse{\equal{\shouldanonymize}{1}}{}{#1}
+  \ifthenelse{\equal{\shouldanonymize}{1}}{ }{#1}%
+}
+
+% For state diagram
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, automata}
+
+\tikzset{
+  >=Stealth,
+  state/.style={circle, draw, minimum size=12mm, align=center},
+  data/.style={rectangle, draw, minimum width=18mm, minimum height=10mm, align=center},
+  config/.style={rectangle, draw, minimum width=18mm, minimum height=10mm, align=center},
+  decision/.style={diamond, draw, aspect=2, inner sep=2pt,
+                   minimum width=28mm, minimum height=18mm, align=center},
 }
 
 % TODO Notes
@@ -46,9 +62,10 @@
 %%% Acknowledgements %%%
 \anonymize{
     \section{Acknowledgments}
+Dan Crichton and the Data Science Working Group at JPL. Raymond Francis.
 }
 
-© 2024. All rights reserved.
+© 2025. All rights reserved.
 
 %%% Disclosures %%%
 \section{Disclosures}
